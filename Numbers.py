@@ -147,7 +147,8 @@ class Ordinal(Set):
             Set(self),
             self
         ).union()
-        return Ordinal(new)
+        new.__class__ = self.__class__
+        return new
 
     def _pred(self):
         """ The predecessor of the Ordinal.
@@ -163,12 +164,12 @@ class Ordinal(Set):
 class Integer(Pair):
     """ Represent Integers as a pair of sign and ordinal.
     """
-    
+
     # These are a bit convoluted, but they had to not accidently reduce to
     # a singleton when used with an ordinal.
     POSITIVE = Set(Set(Set(Set())), Set(Set()))
     NEGATIVE = Set(Set(Set(Set(Set()))), Set(Set()))
-    
+
     def __init__(self, value=0):
         """ Initialize the Integer, possibly from an int value.
         """
@@ -186,7 +187,7 @@ class Integer(Pair):
             if value < 0:
                 sign = self.NEGATIVE
         super().__init__(sign, number)
-    
+
     def __str__(self):
         """ Slightly more typical display.
         """
@@ -195,7 +196,7 @@ class Integer(Pair):
         if sign == self.NEGATIVE and number != ZERO:
             output = "-" + output
         return output
-    
+
     def __lt__(self, other):
         """ Less than.
         """
@@ -216,7 +217,7 @@ class Integer(Pair):
         return not (self <= other)
     def __ge__(self, other):
         return self == other or self > other
-    
+
     def __add__(a, b):
         signa, vala = a
         signb, valb = b
@@ -271,7 +272,7 @@ class Integer(Pair):
                 return number
         else:
             return Integer(Pair(sign, number))
-    
+
     def __mod__(a, b):
         b_sign, b_val = Integer(b)
         if b_sign == Integer.NEGATIVE:
@@ -289,7 +290,7 @@ class Integer(Pair):
         sign, val = self
         num = Integer(Pair(sign, succ(ZERO)))
         return Rational(num, val)
-    
+
     def negative(self):
         """ Return the negative of the integer.
         """
@@ -298,7 +299,7 @@ class Integer(Pair):
         if sign == self.NEGATIVE or value == ZERO:
             new_sign = self.POSITIVE
         return Integer(Pair(new_sign, value))
-    
+
     def is_negative(self):
         """ Returns whether the integer is negative.
         """
@@ -313,7 +314,7 @@ class Rational(Pair):
     """
 
     def __init__(self, numerator, denominator):
-        """ Numerator and denominator must be Ordinals.
+        """ Numerator and denominator must be able to be Integers.
         """
         numerator = Integer(numerator)
         denominator = Integer(denominator)
@@ -370,6 +371,18 @@ class Rational(Pair):
         a, b = self
         return Rational(b, a)
 
+    def negative(self):
+        """ Return the negative of the integer.
+        """
+        num, denom = self
+        return Rational(num.negative(), denom)
+
+    def is_negative(self):
+        """ Returns whether the integer is negative.
+        """
+        num, _ = self
+        return num.is_negative()
+
 
 ZERO = Ordinal()
 
@@ -394,17 +407,17 @@ def _test_ord():
 
     ans = nine / six
     print("9 / 6 =", ans)
-    
+
     neg_four = Integer(-4)
     three = Integer(3)
-    
+
     print("-4 + 3 =", neg_four + three)
     print("-4 * 3 =", neg_four * three)
     print("3 / -4 =", three / neg_four)
     print("-7 % 3 =", Integer(-7) % three)
-    
+
     print("13 =", repr(Ordinal(13)))
-    
+
 
 if __name__ == "__main__":
     import cProfile

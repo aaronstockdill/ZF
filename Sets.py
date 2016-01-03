@@ -16,7 +16,7 @@ def powerset(original):
     if '_powerset' in dir(original):
         return original._powerset()
     raise TypeError("Must be given a Set, or subclass thereof.")
-    
+
 P = powerset # Useful alias
 
 
@@ -24,6 +24,11 @@ def union(a, b):
     """ Return the union of a and b.
     """
     return Set(a, b).union()
+
+def intersection(a, b):
+    """ Return the intersection of a and b.
+    """
+    return Set(a, b).intersection()
 
 
 class Set(object):
@@ -51,7 +56,7 @@ class Set(object):
         """ A prettier view of the set for printing.
         """
         if len(self.items) == 0:
-            return "0"
+            return "∅"
         return "{" + ", ".join(str(i) for i in self.items) + "}"
 
     def __contains__(self, something):
@@ -80,9 +85,9 @@ class Set(object):
         """
         if not isinstance(other, Set):
             return False
-        return (self.subset(other, strict=False) 
+        return (self.subset(other, strict=False)
             and other.subset(self, strict=False))
-    
+
     def __bool__(self):
         """ Python Truthiness, based on whether it is the empty set.
         """
@@ -93,7 +98,7 @@ class Set(object):
         """
         for i in self.items:
             yield i
-    
+
     def _powerset(self):
         """ Generate the powerset of self.
         """
@@ -107,10 +112,10 @@ class Set(object):
                 Set(a, Set(item)).union() for a in sub_powerset
             })
             return Set(*result)
-                
-    
+
+
     def delete(self, other_set):
-        """ Return a set with all the same elements as self, 
+        """ Return a set with all the same elements as self,
             except those in other_set.
         """
         return Set(*self.items.difference(other_set.items))
@@ -128,7 +133,20 @@ class Set(object):
             for item in subset:
                 all_items.add(item)
         return Set(*all_items)
-    
+
+    def intersection(self):
+        """ Return the set intersection.
+        """
+        intersection = set()
+        union = self.union()
+        for item in union:
+            add = True
+            for subset in self.items:
+                add = add and (item in subset)
+            if add:
+                intersection.add(item)
+        return Set(*intersection)
+
     def subset(self, other, strict=False):
         """ Return whether this is a subset of other.
             If the strict flag is set, make sure they are not equal.
@@ -138,13 +156,13 @@ class Set(object):
             return result
         else:
             return result and not (self == other)
-    
+
     def superset(self, other, strict=False):
         """ Determine whether self is a superset of other.
             If the strict flag is set, make sure they are not equal.
         """
         return other.subset(self, strict)
-    
+
     def take(self, number=1):
         """ Take random elements from the set, up to number of them.
         """
@@ -166,6 +184,9 @@ def _test_sets():
     print(un.delete(Set(Set())))
     print(powerset(un))
     print(un.union())
+    a = Set('a', 'b', 'c')
+    b = Set('c', 'd', 'e')
+    print(a, b, intersection(a, b))
 
 
 if __name__ == "__main__":

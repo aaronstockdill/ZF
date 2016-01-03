@@ -22,7 +22,7 @@ except SystemError:
 class Character(Ordinal):
     """ A character is just an ordinal that has a clever representation.
     """
-    
+
     def __init__(self, char=None):
         if char is None:
             super().__init__()
@@ -32,24 +32,24 @@ class Character(Ordinal):
             super().__init__(ord(char))
         elif isinstance(char, int):
             super().__init__(char)
-    
+
     def __str__(self):
         return chr(int(super().__str__()))
 
 
 class String(List):
-    """ A string is a list of Characters
+    """ A string is a list of Characters.
     """
-    
+
     def __init__(self, string):
         super().__init__(*[Character(s) for s in string])
-    
+
     def __str__(self):
         return "".join(str(s) for s in self)
 
 
 def _test_strings():
-    print(Character('a'))
+    print(succ(Character('a')))
     s = String('Hello, I am a set.')
     print(s)
     print(String("Se") + String("ts"))
