@@ -13,8 +13,8 @@ functions.
 def powerset(original):
     """ Return the powerset of the original set.
     """
-    if '_powerset' in dir(original):
-        return original._powerset()
+    if 'powerset' in dir(original):
+        return original.powerset()
     raise TypeError("Must be given a Set, or subclass thereof.")
 
 P = powerset # Useful alias
@@ -99,7 +99,7 @@ class Set(object):
         for i in self.items:
             yield i
 
-    def _powerset(self):
+    def powerset(self):
         """ Generate the powerset of self.
         """
         if self.empty():
