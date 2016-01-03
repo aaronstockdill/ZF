@@ -19,20 +19,20 @@ except SystemError:
     from Structures import *
 
 
-def succ(ord):
+def succ(ordinal):
     """ Successor of the ordinal
     """
-    if '_succ' in dir(ord):
-        return ord._succ()
+    if '_succ' in dir(ordinal):
+        return ordinal._succ()
     else:
         raise TypeError("Must be given an Ordinal.")
 
 
-def pred(ord):
+def pred(ordinal):
     """ Predecessor of the ordinal.
     """
-    if '_pred' in dir(ord):
-        return ord._pred()
+    if '_pred' in dir(ordinal):
+        return ordinal._pred()
     else:
         raise TypeError("Must be given an Ordinal.")
 
@@ -55,7 +55,7 @@ class Ordinal(Set):
                                  "created from positive ints.")
         elif isinstance(from_number, Integer):
             sign, value = from_number
-            assert(sign == from_number.POSITIVE or value == ZERO)
+            assert(sign == Integer.POSITIVE or value == ZERO)
             self.items = value.items
         elif isinstance(from_number, Set):
             self.items = from_number.items
@@ -173,19 +173,19 @@ class Integer(Pair):
     def __init__(self, value=0):
         """ Initialize the Integer, possibly from an int value.
         """
-        sign = self.POSITIVE
+        sign = Integer.POSITIVE
         if isinstance(value, Ordinal):
             number = value
         elif isinstance(value, Integer):
             sign, number = value
         elif isinstance(value, Pair):
             sign, number = value
-            assert(sign == self.POSITIVE or sign == self.NEGATIVE)
+            assert(sign == Integer.POSITIVE or sign == Integer.NEGATIVE)
             assert(isinstance(number, Ordinal))
         else:
             number = Ordinal(abs(value))
             if value < 0:
-                sign = self.NEGATIVE
+                sign = Integer.NEGATIVE
         super().__init__(sign, number)
 
     def __str__(self):
@@ -193,7 +193,7 @@ class Integer(Pair):
         """
         sign, number = self
         output = str(number)
-        if sign == self.NEGATIVE and number != ZERO:
+        if sign == Integer.NEGATIVE and number != ZERO:
             output = "-" + output
         return output
 
@@ -202,11 +202,11 @@ class Integer(Pair):
         """
         self_sign, self_val = self
         other_sign, other_val = other
-        if self_sign == other_sign == self.POSITIVE:
+        if self_sign == other_sign == Integer.POSITIVE:
             return self_val < other_val
-        elif self_sign == other_sign == self.NEGATIVE:
+        elif self_sign == other_sign == Integer.NEGATIVE:
             return other_val < self_val
-        elif self_sign == self.POSITIVE:
+        elif self_sign == Integer.POSITIVE:
             return False
         else:
             return True
@@ -295,16 +295,16 @@ class Integer(Pair):
         """ Return the negative of the integer.
         """
         sign, value = self
-        new_sign = self.NEGATIVE
-        if sign == self.NEGATIVE or value == ZERO:
-            new_sign = self.POSITIVE
+        new_sign = Integer.NEGATIVE
+        if sign == Integer.NEGATIVE or value == ZERO:
+            new_sign = Integer.POSITIVE
         return Integer(Pair(new_sign, value))
 
     def is_negative(self):
         """ Returns whether the integer is negative.
         """
         sign, val = self
-        if sign == self.NEGATIVE and val != 0:
+        if sign == Integer.NEGATIVE and val != 0:
             return True
         return False
 
