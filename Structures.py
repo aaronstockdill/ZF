@@ -13,7 +13,7 @@ try:
     from .Sets import *
 except SystemError:
     from Sets import *
-    
+
 
 class Pair(Set):
     """ Create an ordered pair from Set.
@@ -74,7 +74,7 @@ class Pair(Set):
 class List(Pair):
     """ Linked-list style lists based on the pair.
     """
-    
+
     def __init__(self, *items):
         if len(items) == 0:
             super().__init__()
@@ -92,7 +92,7 @@ class List(Pair):
                 tail.__class__ = self.__class__
                 i -= 1
             super().__init__(items[0], tail)
-    
+
     def __str__(self):
         """ Slightly more typical view of a list.
         """
@@ -113,7 +113,7 @@ class List(Pair):
             yield current
             for item in next_link:
                 yield item
-    
+
     def __len__(self):
         """ Make len return the length of the list.
         """
@@ -124,8 +124,8 @@ class List(Pair):
             return 1
         _, next = super().__iter__()
         return 1 + len(next)
-    
-    
+
+
     def __add__(a, b):
         """ List concatenation.
         """
@@ -140,15 +140,13 @@ class List(Pair):
         result = Pair(a1, tail)
         result.__class__ = a.__class__
         return result
-        
-        
 
 
 def _test_structures():
     print(Pair())
     print(Pair('a', 'b'))
     print(Pair('a'))
-    
+
     print(List())
     print(List('a'))
     print(List('a', 'b'), len(List('a', 'b')))
